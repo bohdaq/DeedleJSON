@@ -7,6 +7,7 @@ public class AddEntity {
 	private String description;
 	private Long date;
 	private Double latitude;
+	private Double longtitude;
 	public String getEmail() {
 		return email;
 	}
@@ -49,5 +50,4 @@ public class AddEntity {
 	public void setLongtitude(Double longtitude) {
 		this.longtitude = longtitude;
 	}
-	private Double longtitude;
 }
