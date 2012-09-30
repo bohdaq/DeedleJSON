@@ -95,7 +95,7 @@ public class JSONUtil {
 				jObject.put("longtitude", e.getProperty("longtitude"));
 				jObject.put("like", e.getProperty("like"));
 				jObject.put("unlike", e.getProperty("unlike"));
-				String commentProopery = (String) e.getProperty("unlike");
+				String commentProopery = (String) e.getProperty("comments");
 				List<String> commentSingle = Arrays.asList(commentProopery
 						.split(Comment.SEPARATOR));
 				HashMap<String, String> commentMap = new HashMap<String, String>();

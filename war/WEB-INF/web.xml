@@ -55,6 +55,16 @@
   </servlet-mapping>
   
   <servlet>
+    <servlet-name>timeline</servlet-name>
+    <servlet-class>com.appspot.deedleit.server.api.Timeline</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>timeline</servlet-name>
+    <url-pattern>/api/v2/timeline</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.appspot.deedleit.server.GreetingServiceImpl</servlet-class>
   </servlet>
