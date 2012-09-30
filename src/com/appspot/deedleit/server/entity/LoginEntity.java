@@ -1,6 +1,5 @@
 package com.appspot.deedleit.server.entity;
 
-import java.util.List;
 
 public class LoginEntity {
 	private String email;

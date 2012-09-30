@@ -62,5 +62,5 @@ public class Comment extends HttpServlet {
 		comment.append(comentEntity.getComment());
 		return comment.toString();
 	}
-	private static final String SEPARATOR = "#$*";
+	public static final String SEPARATOR = "#$*";
 }
