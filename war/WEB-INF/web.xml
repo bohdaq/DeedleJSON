@@ -34,6 +34,16 @@
     <url-pattern>/api/v2/like</url-pattern>
   </servlet-mapping>
   
+    <servlet>
+    <servlet-name>follow</servlet-name>
+    <servlet-class>com.appspot.deedleit.server.api.Follow</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>follow</servlet-name>
+    <url-pattern>/api/v2/follow</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.appspot.deedleit.server.GreetingServiceImpl</servlet-class>
