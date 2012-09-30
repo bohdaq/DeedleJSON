@@ -23,6 +23,17 @@
     <url-pattern>/api/v2/add</url-pattern>
   </servlet-mapping>
   
+  
+  <servlet>
+    <servlet-name>like</servlet-name>
+    <servlet-class>com.appspot.deedleit.server.api.Like</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>like</servlet-name>
+    <url-pattern>/api/v2/like</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <servlet-name>greetServlet</servlet-name>
     <servlet-class>com.appspot.deedleit.server.GreetingServiceImpl</servlet-class>

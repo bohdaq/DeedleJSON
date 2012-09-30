@@ -41,10 +41,12 @@ public class Add extends HttpServlet {
 		item.setProperty("date", addJsonObj.getDate());
 		item.setProperty("latitude", addJsonObj.getLatitude());
 		item.setProperty("longtitude", addJsonObj.getLongtitude());
+		item.setProperty("like", Long.valueOf(0));
+		item.setProperty("unlike", Long.valueOf(0));
 		item.setProperty("comments", "");
 		ds.put(item);
-
 		out.print(JSONUtil.success());
+
 	}
 
 }

@@ -31,25 +31,26 @@ public class Like extends HttpServlet {
 		LikeEntity likeJsonObj = gson.fromJson(json, LikeEntity.class);
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 
-		String authorEmail;
+		String authorEmail = "bob";
 
 		Key itemKey = KeyFactory.createKey("item", likeJsonObj.getPhotoId());
 		try {
-			// Step 1: +1 to item
 			Entity item = ds.get(itemKey);
 			authorEmail = (String) item.getProperty("email");
 			Long totallike = (Long) item.getProperty("like");
 			Long sumlike = totallike + 1;
 			item.setProperty("like", sumlike);
 			ds.put(item);
+		} catch (EntityNotFoundException e) {
+			out.println(JSONUtil.fail());
+		}
 
-			// Step 2: +1 to author, add likedItem property
-			Key authorKey = KeyFactory.createKey("author", authorEmail);
+		Key authorKey = KeyFactory.createKey("author", authorEmail);
+		try {
 			Entity author = ds.get(authorKey);
-			Long totalauthorlike = (Long) author.getProperty("like");
-			Long sumauthorlike;
-			sumauthorlike = totalauthorlike + 1;
-			author.setProperty("like", sumauthorlike);
+			Long totallike = (Long) author.getProperty("like");
+			Long sumlike = totallike + 1;
+			author.setProperty("like", sumlike);
 			// setting rated items
 			if (author.getProperty("likedItems").toString().isEmpty()) {
 				author.setProperty("likedItems", likeJsonObj.getPhotoId());
@@ -62,10 +63,10 @@ public class Like extends HttpServlet {
 				author.setProperty("likedItems", likedItems.toString());
 			}
 			ds.put(author);
-			out.print(JSONUtil.success());
 		} catch (EntityNotFoundException e) {
-			out.print(JSONUtil.fail());
-			e.printStackTrace();
+			out.println(JSONUtil.fail());
 		}
+
+		out.print(JSONUtil.success());
 	}
 }
