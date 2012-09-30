@@ -37,14 +37,14 @@ public class Comment extends HttpServlet {
 			Entity author = ds.get(authorKey);
 			if (author.getProperty("comments").toString().isEmpty()) {
 				author.setProperty("comments",
-						commentJsonObj.getSingleComment());
+						getSingleComment(commentJsonObj));
 			} else {
 				String followingTotalString = (String) author
 						.getProperty("comments");
 				StringBuilder likedItems = new StringBuilder(
 						followingTotalString);
 				likedItems.append("---");
-				likedItems.append(commentJsonObj.getSingleComment());
+				likedItems.append(getSingleComment(commentJsonObj));
 				author.setProperty("comments", likedItems.toString());
 			}
 			ds.put(author);
@@ -53,5 +53,14 @@ public class Comment extends HttpServlet {
 			out.println(JSONUtil.fail());
 		}
 	}
-
+	private String getSingleComment(CommentEntity comentEntity) {
+		StringBuilder comment = new StringBuilder();
+		comment.append(comentEntity.getEmail());
+		comment.append(SEPARATOR);
+		comment.append(comentEntity.getPhotoId());
+		comment.append(SEPARATOR);
+		comment.append(comentEntity.getComment());
+		return comment.toString();
+	}
+	private static final String SEPARATOR = "#$*";
 }

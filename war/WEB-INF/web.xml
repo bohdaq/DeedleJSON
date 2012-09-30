@@ -44,7 +44,7 @@
     <url-pattern>/api/v2/follow</url-pattern>
   </servlet-mapping>
   
-    <servlet>
+  <servlet>
     <servlet-name>comment</servlet-name>
     <servlet-class>com.appspot.deedleit.server.api.Comment</servlet-class>
   </servlet>

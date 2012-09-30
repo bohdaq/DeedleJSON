@@ -22,15 +22,5 @@ public class CommentEntity {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	public String getSingleComment() {
-		StringBuilder comment = new StringBuilder();
-		comment.append(email);
-		comment.append(SEPARATOR);
-		comment.append(photoId);
-		comment.append(SEPARATOR);
-		comment.append(comment);
-		comment.append(SEPARATOR);
-		return comment.toString();
-	}
-	private static final String SEPARATOR = "#$*";
+
 }
