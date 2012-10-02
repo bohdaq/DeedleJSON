@@ -41,6 +41,8 @@ public class Add extends HttpServlet {
 		item.setProperty("date", addJsonObj.getDate());
 		item.setProperty("latitude", addJsonObj.getLatitude());
 		item.setProperty("longtitude", addJsonObj.getLongtitude());
+		item.setProperty("city", addJsonObj.getCity());
+		item.setProperty("country", addJsonObj.getCountry());
 		item.setProperty("like", Long.valueOf(0));
 		item.setProperty("unlike", Long.valueOf(0));
 		item.setProperty("comments", "");

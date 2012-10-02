@@ -5,6 +5,8 @@ public class AddEntity {
 	private String title;
 	private String photoId;
 	private String description;
+	private String city;
+	private String country;
 	private Long date;
 	private Double latitude;
 	private Double longtitude;
@@ -49,5 +51,17 @@ public class AddEntity {
 	}
 	public void setLongtitude(Double longtitude) {
 		this.longtitude = longtitude;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
 	}
 }

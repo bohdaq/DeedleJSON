@@ -41,6 +41,8 @@ public class Login extends HttpServlet {
 		author.setProperty("name", authorJsonObj.getName());
 		author.setProperty("photoId", authorJsonObj.getPhotoId());
 		author.setProperty("folderId", authorJsonObj.getFolderId());
+		author.setProperty("city", authorJsonObj.getCity());
+		author.setProperty("country", authorJsonObj.getCountry());
 		author.setProperty("like", Long.valueOf(0));
 		author.setProperty("unlike", Long.valueOf(0));
 		author.setProperty("likedItems", "");

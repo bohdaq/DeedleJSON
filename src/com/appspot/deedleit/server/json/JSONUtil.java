@@ -50,6 +50,8 @@ public class JSONUtil {
 			json.put("email", author.getProperty("email"));
 			json.put("name", author.getProperty("name"));
 			json.put("photoId", author.getProperty("photoId"));
+			json.put("city", author.getProperty("city"));
+			json.put("country", author.getProperty("country"));
 			json.put("folderId", author.getProperty("folderId"));
 			json.put("unlike", author.getProperty("unlike"));
 

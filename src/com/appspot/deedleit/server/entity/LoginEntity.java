@@ -6,6 +6,8 @@ public class LoginEntity {
 	private String name;
 	private String photoId;
 	private String folderId;
+	private String city;
+	private String country;
 //	private	Integer like;
 //	private Integer unlike;
 //	private List<String> likedItems;
@@ -38,5 +40,17 @@ public class LoginEntity {
 //	public String toString() {
 //		return "Success";
 //	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
 	
 }
