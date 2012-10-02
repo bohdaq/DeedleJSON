@@ -3,9 +3,9 @@ package com.appspot.deedleit.server.json;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
-import com.appspot.deedleit.server.api.Comment;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -46,6 +46,7 @@ public class JSONUtil {
 		try {
 			Entity author = ds.get(authorKey);
 			JSONObject json = new JSONObject();
+			json.put("status", new Integer(100));
 			json.put("email", author.getProperty("email"));
 			json.put("name", author.getProperty("name"));
 			json.put("photoId", author.getProperty("photoId"));
@@ -81,11 +82,11 @@ public class JSONUtil {
 		}
 		List<Entity> allEntities = ds.prepare(query).asList(
 				FetchOptions.Builder.withLimit(count));
-		JSONArray jArray = new JSONArray();
-		JSONObject jObject;
+		
+		JSONArray jArray = new JSONArray(); //result JSONArray
 		for (Entity e : allEntities) {
+			JSONObject jObject = new JSONObject();
 			try {
-				jObject = new JSONObject();
 				jObject.put("title", e.getProperty("title"));
 				jObject.put("email", e.getProperty("email"));
 				jObject.put("description", e.getProperty("description"));
@@ -95,18 +96,26 @@ public class JSONUtil {
 				jObject.put("longtitude", e.getProperty("longtitude"));
 				jObject.put("like", e.getProperty("like"));
 				jObject.put("unlike", e.getProperty("unlike"));
-				String commentProopery = (String) e.getProperty("comments");
-				List<String> commentSingle = Arrays.asList(commentProopery
-						.split(Comment.SEPARATOR));
-				HashMap<String, String> commentMap = new HashMap<String, String>();
-				commentMap.put("email", commentSingle.get(0));
-				commentMap.put("photoId", commentSingle.get(1));
-				commentMap.put("comment", commentSingle.get(2));
-				jObject.put("comments", commentMap);
-				jArray.put(jObject);
+				
+				JSONArray jArrayForAttachingToComments = new JSONArray();
+				//spliting to separate comment objects
+				List<String> separateComments = Arrays.asList(e.getProperty("comments").toString().split("---"));
+				for(String commentMap : separateComments){
+					List<String> singleCommentProperty = Arrays.asList(commentMap.split("#$*"));
+					
+					Map<String, String> singleCommentMap = new HashMap<String, String>();
+					singleCommentMap.put("email", singleCommentProperty.get(0));
+					singleCommentMap.put("photoId", singleCommentProperty.get(1));
+					singleCommentMap.put("comment", singleCommentProperty.get(2));
+					JSONObject singleCommentJsonObject = new JSONObject(singleCommentMap);
+					jArrayForAttachingToComments.put(singleCommentJsonObject);
+				}
+				jObject.put("comments", jArrayForAttachingToComments);
+				
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
+			jArray.put(jObject); //add object to result array - no deal to comments
 		}
 		return jArray.toString();
 	}

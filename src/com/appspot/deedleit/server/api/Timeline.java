@@ -11,13 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.appspot.deedleit.server.json.JSONUtil;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 @SuppressWarnings("serial")
 public class Timeline extends HttpServlet {
 
-	private Gson gson = new GsonBuilder().serializeNulls().create();
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
