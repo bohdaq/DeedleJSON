@@ -40,6 +40,16 @@ public class JSONUtil {
 		return jsonSuccess.toString();
 	}
 
+	public static String notRegistered() {
+		JSONObject jsonSuccess = new JSONObject();
+		try {
+			jsonSuccess.put("status", new Integer(104));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonSuccess.toString();
+	}
+	
 	public static String getUserInfoData(String email) {
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 		Key authorKey = KeyFactory.createKey("author", email);
@@ -66,7 +76,7 @@ public class JSONUtil {
 			return json.toString();
 		} catch (EntityNotFoundException e) {
 			e.printStackTrace();
-			return JSONUtil.fail();
+			return JSONUtil.notRegistered();
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return JSONUtil.fail();
