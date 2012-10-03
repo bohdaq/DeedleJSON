@@ -13,9 +13,6 @@ import com.appspot.deedleit.server.json.JSONUtil;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 
 @SuppressWarnings("serial")
@@ -30,37 +27,13 @@ public class Comment extends HttpServlet {
 		String json = req.getParameter("json");
 		CommentEntity commentJsonObj = gson.fromJson(json, CommentEntity.class);
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+		Entity comment = new Entity("comments");
+		comment.setProperty("email", commentJsonObj.getEmail());
+		comment.setProperty("photoId", commentJsonObj.getPhotoId());
+		comment.setProperty("comment", commentJsonObj.getComment());
+		ds.put(comment);
+		out.println(JSONUtil.success());
+	}
 
-		Key authorKey = KeyFactory.createKey("item",
-				commentJsonObj.getPhotoId());
-		try {
-			Entity author = ds.get(authorKey);
-			if (author.getProperty("comments").toString().isEmpty()) {
-				author.setProperty("comments",
-						getSingleComment(commentJsonObj));
-			} else {
-				String followingTotalString = (String) author
-						.getProperty("comments");
-				StringBuilder likedItems = new StringBuilder(
-						followingTotalString);
-				likedItems.append("---");
-				likedItems.append(getSingleComment(commentJsonObj));
-				author.setProperty("comments", likedItems.toString());
-			}
-			ds.put(author);
-			out.println(JSONUtil.success());
-		} catch (EntityNotFoundException e) {
-			out.println(JSONUtil.fail());
-		}
-	}
-	private String getSingleComment(CommentEntity comentEntity) {
-		StringBuilder comment = new StringBuilder();
-		comment.append(comentEntity.getEmail());
-		comment.append(SEPARATOR);
-		comment.append(comentEntity.getPhotoId());
-		comment.append(SEPARATOR);
-		comment.append(comentEntity.getComment());
-		return comment.toString();
-	}
 	public static final String SEPARATOR = "#$*";
 }

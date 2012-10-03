@@ -100,16 +100,17 @@ public class JSONUtil {
 				jObject.put("unlike", e.getProperty("unlike"));
 				
 				JSONArray jArrayForAttachingToComments = new JSONArray();
-				//spliting to separate comment objects
-				List<String> separateComments = Arrays.asList(e.getProperty("comments").toString().split("---"));
-				for(String commentMap : separateComments){
-					List<String> singleCommentProperty = Arrays.asList(commentMap.split("#$*"));
-					
-					Map<String, String> singleCommentMap = new HashMap<String, String>();
-					singleCommentMap.put("email", singleCommentProperty.get(0));
-					singleCommentMap.put("photoId", singleCommentProperty.get(1));
-					singleCommentMap.put("comment", singleCommentProperty.get(2));
-					JSONObject singleCommentJsonObject = new JSONObject(singleCommentMap);
+				Query commentQuery = new Query("comment");
+				commentQuery.setFilter(new FilterPredicate("photoId",
+						Query.FilterOperator.EQUAL, e.getProperty("photoId")));
+				List<Entity> commentsEntities = ds.prepare(commentQuery).asList(
+						FetchOptions.Builder.withLimit(count));
+				for (Entity comment : commentsEntities){
+					Map<String, String> commentMap = new HashMap<String, String>();
+					commentMap.put("email", (String) comment.getProperty("email"));
+					commentMap.put("photoId", (String) comment.getProperty("photoId"));
+					commentMap.put("comment", (String) comment.getProperty("comment"));
+					JSONObject singleCommentJsonObject = new JSONObject(commentMap);
 					jArrayForAttachingToComments.put(singleCommentJsonObject);
 				}
 				jObject.put("comments", jArrayForAttachingToComments);
