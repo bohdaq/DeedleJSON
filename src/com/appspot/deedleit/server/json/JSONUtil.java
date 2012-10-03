@@ -100,7 +100,7 @@ public class JSONUtil {
 				jObject.put("unlike", e.getProperty("unlike"));
 				
 				JSONArray jArrayForAttachingToComments = new JSONArray();
-				Query commentQuery = new Query("comment");
+				Query commentQuery = new Query("comments");
 				commentQuery.setFilter(new FilterPredicate("photoId",
 						Query.FilterOperator.EQUAL, e.getProperty("photoId")));
 				List<Entity> commentsEntities = ds.prepare(commentQuery).asList(

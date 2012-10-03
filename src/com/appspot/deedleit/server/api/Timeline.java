@@ -25,12 +25,12 @@ public class Timeline extends HttpServlet {
 			JSONObject jsonParameter = new JSONObject(json);
 			String email = jsonParameter.getString("email");
 			Integer count = jsonParameter.getInt("count");
-			Integer skip = jsonParameter.getInt("skip");
-			String rating = jsonParameter.getString("rating");
-			String type = jsonParameter.getString("type");
-			JSONObject jObjectLocation = jsonParameter.getJSONObject("locations");
-			String city = jObjectLocation.getString("city");
-			String country = jObjectLocation.getString("country");
+//			Integer skip = jsonParameter.getInt("skip");
+//			String rating = jsonParameter.getString("rating");
+//			String type = jsonParameter.getString("type");
+//			JSONObject jObjectLocation = jsonParameter.getJSONObject("locations");
+//			String city = jObjectLocation.getString("city");
+//			String country = jObjectLocation.getString("country");
 			
 			
 			String response = JSONUtil.getTimeline(email, count);
