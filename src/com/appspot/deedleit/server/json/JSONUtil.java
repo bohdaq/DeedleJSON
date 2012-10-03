@@ -2,7 +2,6 @@ package com.appspot.deedleit.server.json;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +89,7 @@ public class JSONUtil {
 		}
 	}
 
-	public static String getTimeline(String email, Integer count) {
+	public static String getTimeline(String email, Integer count, Integer skip, String rating, String type, String city, String country) {
 		// "timeline": - JSONArray of Items from datastore,
 		// where comments - Map, attached to "comments"
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
@@ -111,23 +110,23 @@ public class JSONUtil {
 		
 		
 		List<Filter> resultFilterList = new ArrayList<Filter>();
-		
-//		if (type.equals("all")) {
-//			resultFilterList.add(new FilterPredicate("email",
-//					Query.FilterOperator.EQUAL, email));
-//		} else if (type.equals("following")){
-//			CompositeFilter followingFilter = onlyFollowing(followingList);
-//			resultFilterList.addAll(followingFilter.getSubFilters());
-//		}
-		
-//		if (city != null || !(city.equals("")) ){
-//			resultFilterList.add(new FilterPredicate("city",
-//					Query.FilterOperator.EQUAL, city));
-//		}
-//		if (country != null || !(country.equals("")) ){
-//			resultFilterList.add(new FilterPredicate("country",
-//					Query.FilterOperator.EQUAL, country));
-//		}
+
+		if (type.equals("all")) {
+			resultFilterList.add(new FilterPredicate("email",
+					Query.FilterOperator.EQUAL, email));
+		} else if (type.equals("following")) {
+			List<Filter> filtersList = onlyFollowing(followingList);
+			resultFilterList.addAll(filtersList);
+		}
+
+		if (city != null && !(city.equals(""))) {
+			resultFilterList.add(new FilterPredicate("city",
+					Query.FilterOperator.EQUAL, city));
+		}
+		if (country != null && !(country.equals(""))) {
+			resultFilterList.add(new FilterPredicate("country",
+					Query.FilterOperator.EQUAL, country));
+		}
 
 		CompositeFilter resultFilter = new CompositeFilter(CompositeFilterOperator.AND, resultFilterList);
 		query.setFilter(resultFilter);
@@ -135,16 +134,17 @@ public class JSONUtil {
 				FetchOptions.Builder.withLimit(100));
 		Collections.sort(allEntities, new DateComparator());
 
-//		allEntities = selectItemsByRating(allEntities, rating);
-		
-//		if (skip != null || skip != 0) {
-//			int listSize = allEntities.size();
-//			allEntities.subList(skip, listSize);
-//		}
-		
-		
-		allEntities.subList(0, count-1);
-		
+		allEntities = selectItemsByRating(allEntities, rating);
+
+		int listSize = allEntities.size();
+		if (skip != null && skip != 0 && skip < listSize) {
+			allEntities.subList(skip, listSize);
+		}
+
+		int listSizeAfterSkip = allEntities.size();
+		if (count < listSizeAfterSkip) {
+			allEntities.subList(0, count - 1);
+		}
 		
 		JSONArray jArray = new JSONArray(); //result JSONArray
 		for (Entity e : allEntities) {
@@ -184,17 +184,14 @@ public class JSONUtil {
 		return jArray.toString();
 	}
 	
-	private static CompositeFilter onlyFollowing(List<String> followingList) {
+	private static List<Filter> onlyFollowing(List<String> followingList) {
 		List<Filter> filtersList = new ArrayList<Filter>();
 		
 		for(String followingEmail : followingList){
 			filtersList.add(new FilterPredicate("email",
 					Query.FilterOperator.EQUAL, followingEmail));
 		}
-		
-		CompositeFilter compositeFollowingFilter = new Query.CompositeFilter(CompositeFilterOperator.OR, filtersList);
-		
-		return compositeFollowingFilter;
+		return filtersList;
 	}
 
 	private static List<Entity> selectItemsByRating(List<Entity> allEntities, String rating) {
