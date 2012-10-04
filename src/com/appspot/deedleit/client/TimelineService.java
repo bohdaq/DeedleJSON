@@ -2,7 +2,7 @@ package com.appspot.deedleit.client;
 
 import java.util.ArrayList;
 
-import com.appspot.deedleit.server.TimelineServiceEntity;
+import com.appspot.deedleit.shared.TimelineServiceEntity;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 

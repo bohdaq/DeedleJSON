@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.appspot.deedleit.client.TimelineService;
 import com.appspot.deedleit.server.json.JSONUtil;
+import com.appspot.deedleit.shared.TimelineServiceEntity;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
