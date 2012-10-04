@@ -1,9 +1,18 @@
 package com.appspot.deedleit.server;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import com.appspot.deedleit.client.TimelineService;
 import com.appspot.deedleit.server.json.JSONUtil;
+import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.google.appengine.api.urlfetch.HTTPRequest;
+import com.google.appengine.api.urlfetch.HTTPResponse;
+import com.google.appengine.api.urlfetch.URLFetchService;
+import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 import com.google.appengine.labs.repackaged.org.json.JSONArray;
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
@@ -34,7 +43,7 @@ public class TimelineServiceImpl extends RemoteServiceServlet implements
 				String title = jObject.getString("title");
 				String emailNeeded = jObject.getString("email");
 				String description = jObject.getString("description");
-				String photoUrl = fethcDownloadUrl(jObject.getString("photoId"));
+				String photoUrl = fetchDownloadUrl(jObject.getString("photoId"));
 				String cityNeeded = jObject.getString("city");
 				Long date = jObject.getLong("date");
 				Double latitude = jObject.getDouble("latitude");
@@ -53,10 +62,33 @@ public class TimelineServiceImpl extends RemoteServiceServlet implements
 		return resultList;
 	}
 
-	private String fethcDownloadUrl(String string) {
+	private String fetchDownloadUrl(String photoId) {
 		// TODO impl URLFETCH for download url. See this page:
 		// https://developers.google.com/drive/v2/reference/files/get
-		return null;
+		
+		URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
+
+		String response = "default response fetchDownloadUrl";
+		try {
+			URL url = new URL(URL_DRIVE_PREFIX + photoId + URL_DOWNLOAD_SUFFIX
+					+ URL_API_KEY);
+
+			HTTPRequest request = new HTTPRequest(url, HTTPMethod.GET);
+
+			HTTPResponse httpResponse = urlFetchService.fetch(request);
+	    if (httpResponse.getResponseCode() == HttpURLConnection.HTTP_OK) {
+	      response = new String(httpResponse.getContent());
+	    } 
+		} catch (MalformedURLException e) {
+			e.getStackTrace();
+		} catch (IOException e) {
+			e.getStackTrace();
+		}
+
+	    return response;
 	}
+	private static final String URL_DRIVE_PREFIX = "https://www.googleapis.com/drive/v2/files/";
+	private static final String URL_DOWNLOAD_SUFFIX = "?fields=downloadUrl";
+	private static final String URL_API_KEY = "&key=AIzaSyAjfaP-rN1Z3X-EcNmycG7POTQpDkWj4Q8";
 
 }
