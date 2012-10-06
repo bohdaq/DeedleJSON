@@ -66,12 +66,12 @@
   
   <servlet>
     <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.appspot.deedleit.server.GreetingServiceImpl</servlet-class>
+    <servlet-class>com.appspot.deedleit.server.TimelineServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
     <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/deedle/greet</url-pattern>
+    <url-pattern>/deedle/timeline</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

@@ -1,10 +1,10 @@
 package com.appspot.deedleit.server;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import com.appspot.deedleit.client.TimelineService;
 import com.appspot.deedleit.server.json.JSONUtil;
@@ -26,10 +26,14 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class TimelineServiceImpl extends RemoteServiceServlet implements
 		TimelineService {
 
+	private static final Logger log = Logger.getLogger(TimelineServiceImpl.class.getName()); 
+	
 	public ArrayList<TimelineServiceEntity> getTimeline(String email,
 			Integer count, Integer skip, String rating, String type,
 			String city, String country) throws IllegalArgumentException {
-
+		
+		
+		log.info("getTimeline()");
 		String jArrayString = JSONUtil.getTimeline(email, count, skip, rating,
 				type, city, country);
 		
@@ -67,6 +71,7 @@ public class TimelineServiceImpl extends RemoteServiceServlet implements
 		// TODO impl URLFETCH for download url. See this page:
 		// https://developers.google.com/drive/v2/reference/files/get
 		
+		
 		URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
 
 		String response = "default response fetchDownloadUrl";
@@ -77,19 +82,29 @@ public class TimelineServiceImpl extends RemoteServiceServlet implements
 			HTTPRequest request = new HTTPRequest(url, HTTPMethod.GET);
 
 			HTTPResponse httpResponse = urlFetchService.fetch(request);
-	    if (httpResponse.getResponseCode() == HttpURLConnection.HTTP_OK) {
 	      response = new String(httpResponse.getContent());
-	    } 
 		} catch (MalformedURLException e) {
 			e.getStackTrace();
 		} catch (IOException e) {
 			e.getStackTrace();
 		}
 
-	    return response;
+		String photoUrl = parseJSONObjectForDownloadUrl(response);
+
+		return photoUrl;
+	}
+	private String parseJSONObjectForDownloadUrl(String response) {
+		JSONObject jObject;
+		try {
+			jObject = new JSONObject(response);
+			return jObject.getString("thumbnailLink");
+		} catch (JSONException e) {
+			return e.getLocalizedMessage();
+	}
+		
 	}
 	private static final String URL_DRIVE_PREFIX = "https://www.googleapis.com/drive/v2/files/";
-	private static final String URL_DOWNLOAD_SUFFIX = "?fields=downloadUrl";
+	private static final String URL_DOWNLOAD_SUFFIX = "?fields=thumbnailLink";
 	private static final String URL_API_KEY = "&key=AIzaSyAjfaP-rN1Z3X-EcNmycG7POTQpDkWj4Q8";
 
 }

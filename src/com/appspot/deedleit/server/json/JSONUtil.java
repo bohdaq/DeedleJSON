@@ -111,7 +111,7 @@ public class JSONUtil {
 		
 		List<Filter> resultFilterList = new ArrayList<Filter>();
 
-		if (type.equals("all")) {
+		if (type!= null && type.equals("all")) {
 			resultFilterList.add(new FilterPredicate("email",
 					Query.FilterOperator.EQUAL, email));
 		} else if (type.equals("following")) {

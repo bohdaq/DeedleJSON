@@ -1,37 +1,55 @@
 package com.appspot.deedleit.client;
 
-import java.util.ArrayList;
-
-import com.appspot.deedleit.shared.TimelineServiceEntity;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Window;
 
 public class Deedle implements EntryPoint {
 
-	
-	private final TimelineServiceAsync timelineItems = GWT
-			.create(TimelineService.class);
+	private static final String JSON_TIMELINE = "{ \"email\": \"example@gmail.com\", \"count\": 3, \"skip\": 20, \"rating\": \"all\", \"type\": \"all\", \"locations\": { \"city\": \"abercrombie\", \"country\": \"Ukraine\" } }";
+	private static final String JSON_URL = GWT.getHostPageBaseURL()
+			+ "api/v2/timeline?json=" + JSON_TIMELINE;
 
-	
+	@Override
 	public void onModuleLoad() {
-		timelineItems.getTimeline("example@gmail.com", 10, 0, "all", null, null,
-				null, new AsyncCallback<ArrayList<TimelineServiceEntity>>() {
-					public void onFailure(Throwable caught) {
+		// TODO Auto-generated method stub
+		Window.alert("Hello world!" + JSON_URL);
+		
+		String url = JSON_URL;
+		
+	    // Send request to server and catch any errors.
+	    RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, url);
 
-					}
+	    try {
+	      Request request = builder.sendRequest(null, new RequestCallback() {
+	        public void onError(Request request, Throwable exception) {
+	          Window.alert("Couldn't retrieve JSON");
+	        }
 
-					@Override
-					public void onSuccess(
-							ArrayList<TimelineServiceEntity> result) {
-						
-					}
-				});
+	        public void onResponseReceived(Request request, Response response) {
+	          if (200 == response.getStatusCode()) {
+	        	  Window.alert(asArrayOfStockData(response.getText()).get(0).getEmail());
+	          } else {
+	        	  Window.alert("Couldn't retrieve JSON (" + response.getStatusText()
+	                + ")");
+	          }
+	        }
 
-//		// Add a handler to send the name to the server
-//		MyHandler handler = new MyHandler();
-//		sendButton.addClickHandler(handler);
-//		nameField.addKeyUpHandler(handler);
+	      });
+	    } catch (RequestException e) {
+	    	Window.alert("Couldn't retrieve JSON");
+	    }
+
 	}
+	
+	  private final native JsArray<TimelineData> asArrayOfStockData(String json) /*-{
+	    return eval(json);
+	  }-*/;
+
 }
