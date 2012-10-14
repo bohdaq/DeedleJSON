@@ -3,9 +3,7 @@ package com.appspot.deedleit.server.json;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 import com.appspot.deedleit.server.util.DateComparator;
@@ -128,14 +126,12 @@ public class JSONUtil {
 		}
 		
 		// types If all - nothing to filter!
-		if(type.equals("following")){
+		if (type.equalsIgnoreCase("following")) {
 			if (followingList.size() != 0 || followingList != null) {
 				resultFilterList.add(onlyFollowing(followingList));
 			}
-		}
-		if(type.equals("mine")){
-			resultFilterList.add(new FilterPredicate("email",
-					Query.FilterOperator.EQUAL, email));
+		} else if (type.equalsIgnoreCase("mine")) {
+			resultFilterList.add(new FilterPredicate("email", Query.FilterOperator.EQUAL, email));
 		}
 		
 		
@@ -166,7 +162,7 @@ public class JSONUtil {
 		JSONArray jArray = new JSONArray(); //result JSONArray
 		
 		
-		for (int i = skip; i< allEntities.size(); i++) {
+		for (int i = skip; i< allEntitiesAfterRating.size(); i++) {
 			
 			Entity e = allEntitiesAfterRating.get(i);
 			JSONObject jObject = new JSONObject();
@@ -183,21 +179,21 @@ public class JSONUtil {
 				jObject.put("city", e.getProperty("city"));
 				jObject.put("country", e.getProperty("country"));
 				
-				JSONArray jArrayForAttachingToComments = new JSONArray();
-				Query commentQuery = new Query("comments");
-				commentQuery.setFilter(new FilterPredicate("photoId",
-						Query.FilterOperator.EQUAL, e.getProperty("photoId")));
-				List<Entity> commentsEntities = ds.prepare(commentQuery).asList(
-						FetchOptions.Builder.withLimit(count));
-				for (Entity comment : commentsEntities){
-					Map<String, String> commentMap = new HashMap<String, String>();
-					commentMap.put("email", (String) comment.getProperty("email"));
-					commentMap.put("photoId", (String) comment.getProperty("photoId"));
-					commentMap.put("comment", (String) comment.getProperty("comment"));
-					JSONObject singleCommentJsonObject = new JSONObject(commentMap);
-					jArrayForAttachingToComments.put(singleCommentJsonObject);
-				}
-				jObject.put("comments", jArrayForAttachingToComments);
+//				JSONArray jArrayForAttachingToComments = new JSONArray();
+//				Query commentQuery = new Query("comments");
+//				commentQuery.setFilter(new FilterPredicate("photoId",
+//						Query.FilterOperator.EQUAL, e.getProperty("photoId")));
+//				List<Entity> commentsEntities = ds.prepare(commentQuery).asList(
+//						FetchOptions.Builder.withLimit(count));
+//				for (Entity comment : commentsEntities){
+//					Map<String, String> commentMap = new HashMap<String, String>();
+//					commentMap.put("email", (String) comment.getProperty("email"));
+//					commentMap.put("photoId", (String) comment.getProperty("photoId"));
+//					commentMap.put("comment", (String) comment.getProperty("comment"));
+//					JSONObject singleCommentJsonObject = new JSONObject(commentMap);
+//					jArrayForAttachingToComments.put(singleCommentJsonObject);
+//				}
+//				jObject.put("comments", jArrayForAttachingToComments);
 				
 			} catch (JSONException e1) {
 				e1.printStackTrace();
@@ -240,26 +236,28 @@ public class JSONUtil {
 	}
 
 	private static List<Entity> selectItemsByRating(List<Entity> allEntities, String rating) {
-		if (rating == null || rating.equals("")){
+		if (rating == null || rating.equals("") || rating.equalsIgnoreCase("all")){
 			return allEntities;
 		}
-		if (rating.equals("like")){
+		
+		List<Entity> ratedList = new ArrayList<Entity>();
+		if (rating.equalsIgnoreCase("like")){
 			for(Entity e : allEntities){
 				Long first =(Long) e.getProperty("like");
 				Long second =(Long) e.getProperty("unlike");
 				if (second-first > 0){
-					allEntities.remove(e);
+					ratedList.add(e);
 				}
 			}
-		} else {
+		} else if (rating.equalsIgnoreCase("unlike")) {
 			for(Entity e : allEntities){
 				Long first =(Long) e.getProperty("like");
 				Long second =(Long) e.getProperty("unlike");
 				if (first-second > 0){
-					allEntities.remove(e);
+					ratedList.add(e);
 				}
 			}
 		}
-		return allEntities;
+		return ratedList;
 	}
 }
