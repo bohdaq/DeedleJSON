@@ -178,6 +178,8 @@ public class JSONUtil {
 				jObject.put("unlike", e.getProperty("unlike"));
 				jObject.put("city", e.getProperty("city"));
 				jObject.put("country", e.getProperty("country"));
+				jObject.put("userPhotoId", e.getProperty("userPhotoId"));
+				jObject.put("name", e.getProperty("name"));
 				
 //				JSONArray jArrayForAttachingToComments = new JSONArray();
 //				Query commentQuery = new Query("comments");
