@@ -241,7 +241,7 @@ public class JSONUtil {
 		}
 		
 		List<Entity> ratedList = new ArrayList<Entity>();
-		if (rating.equalsIgnoreCase("like")){
+		if (rating.equalsIgnoreCase("unlike")){
 			for(Entity e : allEntities){
 				Long first =(Long) e.getProperty("like");
 				Long second =(Long) e.getProperty("unlike");
@@ -249,7 +249,7 @@ public class JSONUtil {
 					ratedList.add(e);
 				}
 			}
-		} else if (rating.equalsIgnoreCase("unlike")) {
+		} else if (rating.equalsIgnoreCase("like")) {
 			for(Entity e : allEntities){
 				Long first =(Long) e.getProperty("like");
 				Long second =(Long) e.getProperty("unlike");
