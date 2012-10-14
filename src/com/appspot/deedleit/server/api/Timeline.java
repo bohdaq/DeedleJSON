@@ -17,7 +17,7 @@ public class Timeline extends HttpServlet {
 
 	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		PrintWriter out = resp.getWriter();
 		String json = req.getParameter("json");

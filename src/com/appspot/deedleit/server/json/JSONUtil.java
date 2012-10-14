@@ -94,6 +94,8 @@ public class JSONUtil {
 		// where comments - Map, attached to "comments"
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 		
+		
+		// type: following
 		List<String> followingList = new ArrayList<String>();
 		
 		Key authorKey = KeyFactory.createKey("author", email);
@@ -106,48 +108,57 @@ public class JSONUtil {
 			e2.printStackTrace();
 		}		
 		
+		
+		// creating query
 		Query query = new Query("item");
 		
-		
+		// list of filters
 		List<Filter> resultFilterList = new ArrayList<Filter>();
 
-		if (type!= null && type.equals("all")) {
-			resultFilterList.add(new FilterPredicate("email",
-					Query.FilterOperator.EQUAL, email));
-		} else if (type.equals("following")) {
-			List<Filter> filtersList = onlyFollowing(followingList);
-			resultFilterList.addAll(filtersList);
-		}
-
-		if (city != null && !(city.equals(""))) {
+		// city
+		if (city != null && !(city.equals("null"))) {
 			resultFilterList.add(new FilterPredicate("city",
 					Query.FilterOperator.EQUAL, city));
 		}
-		if (country != null && !(country.equals(""))) {
+		
+		// country
+		if (country != null && !(country.equals("null"))) {
 			resultFilterList.add(new FilterPredicate("country",
 					Query.FilterOperator.EQUAL, country));
 		}
-
-		CompositeFilter resultFilter = new CompositeFilter(CompositeFilterOperator.AND, resultFilterList);
-		query.setFilter(resultFilter);
+		
+		// types If all - nothing to filter!
+		if(type.equals("following")){
+			if (followingList.size() != 0 || followingList != null) {
+				resultFilterList.add(onlyFollowing(followingList));
+			}
+		}
+		if(type.equals("mine")){
+			resultFilterList.add(new FilterPredicate("email",
+					Query.FilterOperator.EQUAL, email));
+		}
+		
+		
+		if (resultFilterList.size() > 1) {
+			CompositeFilter resultFilter = new CompositeFilter(CompositeFilterOperator.AND, resultFilterList);
+			query.setFilter(resultFilter);
+		} else if (resultFilterList.size() == 1) {
+			query.setFilter(resultFilterList.get(0));
+		}
+		
 		List<Entity> allEntities = ds.prepare(query).asList(
 				FetchOptions.Builder.withLimit(100));
 		Collections.sort(allEntities, new DateComparator());
 
-		allEntities = selectItemsByRating(allEntities, rating);
+		List<Entity> allEntitiesAfterRating = selectItemsByRating(allEntities, rating);
+		if (allEntitiesAfterRating.size() >= skip)
+			allEntitiesAfterRating.subList(0, skip).clear();
 
-		int listSize = allEntities.size();
-		if (skip != null && skip != 0 && skip < listSize) {
-			allEntities.subList(skip, listSize);
-		}
-
-		int listSizeAfterSkip = allEntities.size();
-		if (count < listSizeAfterSkip) {
-			allEntities.subList(0, count - 1);
-		}
+		if (allEntitiesAfterRating.size() >= count)
+			allEntitiesAfterRating.subList(0, count - 1);
 		
 		JSONArray jArray = new JSONArray(); //result JSONArray
-		for (Entity e : allEntities) {
+		for (Entity e : allEntitiesAfterRating) {
 			JSONObject jObject = new JSONObject();
 			try {
 				jObject.put("title", e.getProperty("title"));
@@ -159,6 +170,8 @@ public class JSONUtil {
 				jObject.put("longtitude", e.getProperty("longtitude"));
 				jObject.put("like", e.getProperty("like"));
 				jObject.put("unlike", e.getProperty("unlike"));
+				jObject.put("city", e.getProperty("city"));
+				jObject.put("country", e.getProperty("country"));
 				
 				JSONArray jArrayForAttachingToComments = new JSONArray();
 				Query commentQuery = new Query("comments");
@@ -184,28 +197,32 @@ public class JSONUtil {
 		return jArray.toString();
 	}
 	
-	private static List<Filter> onlyFollowing(List<String> followingList) {
+	private static Filter onlyFollowing(List<String> followingList) {
 		List<Filter> filtersList = new ArrayList<Filter>();
 		
 		for(String followingEmail : followingList){
 			filtersList.add(new FilterPredicate("email",
 					Query.FilterOperator.EQUAL, followingEmail));
 		}
-		return filtersList;
+		Filter followingFilter;
+		if (filtersList.size() > 1){
+			followingFilter = CompositeFilterOperator.or(filtersList);
+		} else {
+			followingFilter  = filtersList.get(0);
+		}
+		
+		return followingFilter;
 	}
 
 	private static List<Entity> selectItemsByRating(List<Entity> allEntities, String rating) {
-		if (rating == null){
-			return allEntities;
-		}
-		if (rating.equals("all")){
+		if (rating == null || rating.equals("")){
 			return allEntities;
 		}
 		if (rating.equals("like")){
 			for(Entity e : allEntities){
 				Long first =(Long) e.getProperty("like");
 				Long second =(Long) e.getProperty("unlike");
-				if (second-first>0){
+				if (second-first > 0){
 					allEntities.remove(e);
 				}
 			}
@@ -213,7 +230,7 @@ public class JSONUtil {
 			for(Entity e : allEntities){
 				Long first =(Long) e.getProperty("like");
 				Long second =(Long) e.getProperty("unlike");
-				if (first-second>0){
+				if (first-second > 0){
 					allEntities.remove(e);
 				}
 			}
