@@ -151,14 +151,24 @@ public class JSONUtil {
 		Collections.sort(allEntities, new DateComparator());
 
 		List<Entity> allEntitiesAfterRating = selectItemsByRating(allEntities, rating);
-		if (allEntitiesAfterRating.size() >= skip)
-			allEntitiesAfterRating.subList(0, skip).clear();
-
-		if (allEntitiesAfterRating.size() >= count)
-			allEntitiesAfterRating.subList(0, count - 1);
+	
+//		List<Entity> allEntityAfterSkip = null; 
+//		if (allEntitiesAfterRating.size() >= skip){
+//			allEntityAfterSkip = new ArrayList<Entity>(allEntitiesAfterRating.subList(0, skip));
+//		}
+//		
+//		
+//		List<Entity> allEntityAfterCount; 
+//		if (allEntityAfterSkip != null && allEntityAfterSkip.size() >= count){
+//			allEntityAfterCount = allEntityAfterSkip.subList(0, count - 1);
+//		}
 		
 		JSONArray jArray = new JSONArray(); //result JSONArray
-		for (Entity e : allEntitiesAfterRating) {
+		
+		
+		for (int i = skip; i< allEntities.size(); i++) {
+			
+			Entity e = allEntitiesAfterRating.get(i);
 			JSONObject jObject = new JSONObject();
 			try {
 				jObject.put("title", e.getProperty("title"));
@@ -194,7 +204,22 @@ public class JSONUtil {
 			}
 			jArray.put(jObject); //add object to result array - no deal to comments
 		}
-		return jArray.toString();
+		
+		JSONArray resultJArray = new JSONArray();
+		
+		for(int i=0; i<jArray.length(); i++){
+			if (i==count){
+				break;
+			}
+			try {
+				resultJArray.put(i, jArray.get(i));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return resultJArray.toString();
 	}
 	
 	private static Filter onlyFollowing(List<String> followingList) {
