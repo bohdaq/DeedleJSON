@@ -5,24 +5,28 @@ public class CommentEntity {
 	private String deedId;
 	private String comment;
 	private String userPhotoId;
+	
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 	public String getDeedId() {
 		return deedId;
 	}
-	public void setDeedId(String photoId) {
-		this.deedId = photoId;
+	public void setDeedId(String deedId) {
+		this.deedId = deedId;
 	}
+	
 	public String getComment() {
 		return comment;
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+	
 	public String getUserPhotoId() {
 		return userPhotoId;
 	}

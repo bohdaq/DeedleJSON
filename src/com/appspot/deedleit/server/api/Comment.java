@@ -2,6 +2,7 @@ package com.appspot.deedleit.server.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import com.appspot.deedleit.server.json.JSONUtil;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
@@ -30,10 +32,10 @@ public class Comment extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		PrintWriter out = resp.getWriter();
 		String json = req.getParameter("json");
 		CommentEntity commentJsonObj = gson.fromJson(json, CommentEntity.class);
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+		PrintWriter out = resp.getWriter();
 		Entity comment = new Entity("comments");
 		comment.setProperty("email", commentJsonObj.getEmail());
 		comment.setProperty("deedId", commentJsonObj.getDeedId());
@@ -46,15 +48,15 @@ public class Comment extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		String deedId = req.getParameter("deedId");
 		PrintWriter out = resp.getWriter();
 		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-		String deedId = req.getParameter("deedId");
-		Filter deedFilter = new FilterPredicate("city", Query.FilterOperator.EQUAL, deedId);
+		Filter deedFilter = new FilterPredicate("deedId", Query.FilterOperator.EQUAL, deedId);
 		Query query = new Query("comments");
 		query.setFilter(deedFilter);
-		PreparedQuery pq = ds.prepare(query);
+		List<Entity> commentList = ds.prepare(query).asList(FetchOptions.Builder.withLimit(100));
 		JSONArray jArray = new JSONArray();
-		for (Entity e : pq.asIterable()) {
+		for (Entity e : commentList) {
 			JSONObject commentJSON = new JSONObject();
 			try {
 				commentJSON.put("email", e.getProperty("email"));
