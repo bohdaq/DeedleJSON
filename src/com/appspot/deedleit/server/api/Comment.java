@@ -41,6 +41,8 @@ public class Comment extends HttpServlet {
 		comment.setProperty("deedId", commentJsonObj.getDeedId());
 		comment.setProperty("comment", commentJsonObj.getComment());
 		comment.setProperty("userPhotoId", commentJsonObj.getUserPhotoId());
+		comment.setProperty("name", commentJsonObj.getName());
+		comment.setProperty("date", commentJsonObj.getDate());
 		ds.put(comment);
 		out.println(JSONUtil.success());
 	}
@@ -63,6 +65,8 @@ public class Comment extends HttpServlet {
 				commentJSON.put("deedId", e.getProperty("deedId"));
 				commentJSON.put("comment", e.getProperty("comment"));
 				commentJSON.put("userPhotoId", e.getProperty("userPhotoId"));
+				commentJSON.put("name", e.getProperty("name"));
+				commentJSON.put("date", e.getProperty("date"));
 			} catch (JSONException e1) {
 				e1.getMessage();
 			}

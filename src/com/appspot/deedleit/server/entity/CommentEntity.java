@@ -5,6 +5,8 @@ public class CommentEntity {
 	private String deedId;
 	private String comment;
 	private String userPhotoId;
+	private String name;
+	private Long date;
 	
 	public String getEmail() {
 		return email;
@@ -32,6 +34,18 @@ public class CommentEntity {
 	}
 	public void setUserPhotoId(String userPhotoId) {
 		this.userPhotoId = userPhotoId;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Long getDate() {
+		return date;
+	}
+	public void setDate(Long date) {
+		this.date = date;
 	}
 
 }
