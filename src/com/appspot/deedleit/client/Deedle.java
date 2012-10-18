@@ -19,7 +19,7 @@ public class Deedle implements EntryPoint {
 	//<script type="text/javascript" language="javascript" src="deedle/deedle.nocache.js"></script>
 
 	//JSON RPC
-	private static final String JSON_TIMELINE = "{ \"email\": \"example@gmail.com\", \"count\": 3, \"skip\": 20, \"rating\": \"all\", \"type\": \"all\", \"locations\": { \"city\": \"abercrombie\", \"country\": \"Ukraine\" } }";
+	private static final String JSON_TIMELINE = "{ \"email\": \"example@gmail.com\", \"count\": 3, \"skip\": 0, \"rating\": \"all\", \"type\": \"all\", \"locations\": { \"city\": null, \"country\": null } }";
 	private static final String JSON_URL = GWT.getHostPageBaseURL()
 			+ "api/v2/timeline?json=" + JSON_TIMELINE;
 	
