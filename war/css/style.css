@@ -436,9 +436,9 @@ p {
 
 a.more {
 	font-size:13px;
-	color:#913533;
+	color:#006AB4;
 }
-a.more:hover { color:#c96d37;
+a.more:hover { color:#4ab4ff;
 }
 a.more span {
 	padding-right:14px;
@@ -1198,7 +1198,7 @@ ul.list3 li {
 }
 .element .title a {
 	font-size:16px;
-	color:#913533;
+	color:#006ab4;
 }
 
 a.img_hov {
@@ -1571,10 +1571,61 @@ ul.related_post li a.comment {
 
 .categories, .categories a {font-size:14px !important;
 }
-
-
-
-
-
-
-
+.user_profile .user_avatar {
+    float: left;
+    margin-right: 20px;
+}
+.user_profile .user_avatar img {
+    border: 3px solid #374445;
+    border-radius: 3px;
+}
+.user_profile .user_name a {
+    font-size: 18px;
+}
+.user_profile {
+    margin-top: 22px;
+    float: left;
+}
+.user_profile .user_name {
+    margin-bottom: 9px;
+    height: 23px;
+    float: left;
+}
+.user_profile .user_location img, .user_profile .user_location p {
+    display: inline;
+}
+.user_profile .user_location p {
+    color: #bbbdb3;
+}
+.user_profile .user_location img {
+    
+}
+.post_user_info .post_user_avatar {
+    float: left;
+}
+.post_user_info .post_user_avatar img {
+        border: 3px solid #BABDAF;
+    border-radius: 3px;
+    margin-right: 10px;
+}
+.post_user_info .post_user_name a {
+    float: left;
+    color: #115483;
+}
+.post_user_info .post_user_name {
+    height: 20px;
+    margin-bottom: 5px;
+}
+.post_user_info .post_user_location  {
+    float: left;
+}
+.post_user_info .post_user_location img {
+    float: left;
+    margin-right: 5px;
+}
+.post_user_info .post_user_location p {
+    float: left;
+}
+.post_user_info {
+    height: 78px;
+}

@@ -1,17 +1,36 @@
 package com.appspot.deedleit.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 
 public class Deedle implements EntryPoint {
 
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void onModuleLoad() {
+
+		final Hyperlink showTimeline = new Hyperlink();
+		showTimeline.setText("Show Timeline");
+		//showTimeline.setStyleName("signin");
+		showTimeline.addClickListener(new ClickListener() {
+			
+			@Override
+			public void onClick(Widget sender) {
+				showTimeline.setText("Home");
+				//changeViewToTimeline();
+			}
+		});
+		RootPanel.get("switchLink").add(showTimeline);
+		
+		//JSON RPC
 //	private static final String JSON_TIMELINE = "{ \"email\": \"example@gmail.com\", \"count\": 3, \"skip\": 20, \"rating\": \"all\", \"type\": \"all\", \"locations\": { \"city\": \"abercrombie\", \"country\": \"Ukraine\" } }";
 //	private static final String JSON_URL = GWT.getHostPageBaseURL()
 //			+ "api/v2/timeline?json=" + JSON_TIMELINE;
-
-	@Override
-	public void onModuleLoad() {
-		
 		// TODO Auto-generated method stub
 //		Window.alert("Hello world!" + JSON_URL);
 //		
