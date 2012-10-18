@@ -17,6 +17,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class Deedle implements EntryPoint {
 	//<script type="text/javascript" language="javascript" src="deedle/deedle.nocache.js"></script>
+	// https://developers.google.com/drive/v2/reference/files/get#try-it - whole scope
+	// Cut s220, make full size!
 
 	//JSON RPC
 	private static final String JSON_TIMELINE = "{ \"email\": \"example@gmail.com\", \"count\": 3, \"skip\": 0, \"rating\": \"all\", \"type\": \"all\", \"locations\": { \"city\": null, \"country\": null } }";
