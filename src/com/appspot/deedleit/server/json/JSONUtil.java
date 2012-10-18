@@ -219,6 +219,138 @@ public class JSONUtil {
 		
 		return resultJArray.toString();
 	}
+	public static String getTimelineWithThumbs(String email, Integer count, Integer skip, String rating, String type, String city, String country) {
+		// "timeline": - JSONArray of Items from datastore,
+		// where comments - Map, attached to "comments"
+		DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+		
+		
+		// type: following
+		List<String> followingList = new ArrayList<String>();
+		
+		Key authorKey = KeyFactory.createKey("author", email);
+		try {
+			Entity author = ds.get(authorKey);
+			String following = (String) author.getProperty("following");
+			followingList = Arrays.asList(following.split("---"));
+			
+		} catch (EntityNotFoundException e2) {
+			e2.printStackTrace();
+		}		
+		
+		
+		// creating query
+		Query query = new Query("item");
+		
+		// list of filters
+		List<Filter> resultFilterList = new ArrayList<Filter>();
+		
+		// city
+		if (city != null && !(city.equals("null"))) {
+			resultFilterList.add(new FilterPredicate("city",
+					Query.FilterOperator.EQUAL, city));
+		}
+		
+		// country
+		if (country != null && !(country.equals("null"))) {
+			resultFilterList.add(new FilterPredicate("country",
+					Query.FilterOperator.EQUAL, country));
+		}
+		
+		// types If all - nothing to filter!
+		if (type.equalsIgnoreCase("following")) {
+			if (followingList.size() != 0 || followingList != null) {
+				resultFilterList.add(onlyFollowing(followingList));
+			}
+		} else if (type.equalsIgnoreCase("mine")) {
+			resultFilterList.add(new FilterPredicate("email", Query.FilterOperator.EQUAL, email));
+		}
+		
+		
+		if (resultFilterList.size() > 1) {
+			CompositeFilter resultFilter = new CompositeFilter(CompositeFilterOperator.AND, resultFilterList);
+			query.setFilter(resultFilter);
+		} else if (resultFilterList.size() == 1) {
+			query.setFilter(resultFilterList.get(0));
+		}
+		
+		List<Entity> allEntities = ds.prepare(query).asList(
+				FetchOptions.Builder.withLimit(100));
+		Collections.sort(allEntities, new DateComparator());
+		
+		List<Entity> allEntitiesAfterRating = selectItemsByRating(allEntities, rating);
+		
+//		List<Entity> allEntityAfterSkip = null; 
+//		if (allEntitiesAfterRating.size() >= skip){
+//			allEntityAfterSkip = new ArrayList<Entity>(allEntitiesAfterRating.subList(0, skip));
+//		}
+//		
+//		
+//		List<Entity> allEntityAfterCount; 
+//		if (allEntityAfterSkip != null && allEntityAfterSkip.size() >= count){
+//			allEntityAfterCount = allEntityAfterSkip.subList(0, count - 1);
+//		}
+		
+		JSONArray jArray = new JSONArray(); //result JSONArray
+		
+		
+		for (int i = skip; i< allEntitiesAfterRating.size(); i++) {
+			
+			Entity e = allEntitiesAfterRating.get(i);
+			JSONObject jObject = new JSONObject();
+			try {
+				jObject.put("title", e.getProperty("title"));
+				jObject.put("email", e.getProperty("email"));
+				jObject.put("description", e.getProperty("description"));
+				jObject.put("photoId", e.getProperty("photoId"));
+				jObject.put("date", e.getProperty("date"));
+				jObject.put("latitude", e.getProperty("latitude"));
+				jObject.put("longtitude", e.getProperty("longtitude"));
+				jObject.put("like", e.getProperty("like"));
+				jObject.put("unlike", e.getProperty("unlike"));
+				jObject.put("city", e.getProperty("city"));
+				jObject.put("country", e.getProperty("country"));
+				jObject.put("userPhotoId", e.getProperty("userPhotoId"));
+				jObject.put("name", e.getProperty("name"));
+				
+//				JSONArray jArrayForAttachingToComments = new JSONArray();
+//				Query commentQuery = new Query("comments");
+//				commentQuery.setFilter(new FilterPredicate("photoId",
+//						Query.FilterOperator.EQUAL, e.getProperty("photoId")));
+//				List<Entity> commentsEntities = ds.prepare(commentQuery).asList(
+//						FetchOptions.Builder.withLimit(count));
+//				for (Entity comment : commentsEntities){
+//					Map<String, String> commentMap = new HashMap<String, String>();
+//					commentMap.put("email", (String) comment.getProperty("email"));
+//					commentMap.put("photoId", (String) comment.getProperty("photoId"));
+//					commentMap.put("comment", (String) comment.getProperty("comment"));
+//					JSONObject singleCommentJsonObject = new JSONObject(commentMap);
+//					jArrayForAttachingToComments.put(singleCommentJsonObject);
+//				}
+//				jObject.put("comments", jArrayForAttachingToComments);
+				
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+			jArray.put(jObject); //add object to result array - no deal to comments
+		}
+		
+		JSONArray resultJArray = new JSONArray();
+		
+		for(int i=0; i<jArray.length(); i++){
+			if (i==count){
+				break;
+			}
+			try {
+				resultJArray.put(i, jArray.get(i));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return resultJArray.toString();
+	}
 	
 	private static Filter onlyFollowing(List<String> followingList) {
 		List<Filter> filtersList = new ArrayList<Filter>();

@@ -21,7 +21,7 @@ public class Deedle implements EntryPoint {
 	//JSON RPC
 	private static final String JSON_TIMELINE = "{ \"email\": \"example@gmail.com\", \"count\": 3, \"skip\": 0, \"rating\": \"all\", \"type\": \"all\", \"locations\": { \"city\": null, \"country\": null } }";
 	private static final String JSON_URL = GWT.getHostPageBaseURL()
-			+ "api/v2/timeline?json=" + JSON_TIMELINE;
+			+ "api/v2/timelineClientSide?json=" + JSON_TIMELINE;
 	
 	
 	@SuppressWarnings("deprecation")
@@ -77,7 +77,7 @@ public class Deedle implements EntryPoint {
 				
 				public void onResponseReceived(Request request, Response response) {
 					if (200 == response.getStatusCode()) {
-						Window.alert(asArrayOfStockData(response.getText()).get(0).getEmail());
+						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).length()));
 					} else {
 						Window.alert("Couldn't retrieve JSON (" + response.getStatusText()
 								+ ")");

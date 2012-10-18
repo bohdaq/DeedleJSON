@@ -14,6 +14,14 @@ public class TimelineData extends JavaScriptObject {
 	public final native String getPhotoId() /*-{
 		return this.photoId;
 	}-*/;
+	
+	public final native String getName() /*-{
+		return this.name;
+	}-*/;
+	
+	public final native String getUserPhotoId() /*-{
+		return this.userPhotoId;
+	}-*/;
 
 	public final native String getTitle() /*-{
 		return this.title;
