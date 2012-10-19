@@ -61,8 +61,7 @@ public class Dislike extends HttpServlet {
 			Entity authorLikedAdd = ds.get(authorLikedAddKey);
 			
 			if (!(authorLikedAdd.getProperty("likedItems").toString().isEmpty())) {
-				String likedTotalString = (String) authorLikedAdd
-						.getProperty("likedItems");
+				String likedTotalString = (String) authorLikedAdd.getProperty("likedItems");
 				String likedFirstStepOfRemove = likedTotalString.replace(likeJsonObj.getPhotoId(), "");
 				String likedResult = likedFirstStepOfRemove.replace("------", "---");
 				authorLikedAdd.setProperty("likedItems", likedResult);

@@ -19,14 +19,13 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 
 @SuppressWarnings("serial")
-public class Follow extends HttpServlet {
+public class Unfollow extends HttpServlet {
 
 	private Gson gson = new Gson();
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
 		PrintWriter out = resp.getWriter();
 		String json = req.getParameter("json");
 		FollowEntity followJsonObj = gson.fromJson(json, FollowEntity.class);
@@ -36,15 +35,11 @@ public class Follow extends HttpServlet {
 				.createKey("author", followJsonObj.getEmail());
 		try {
 			Entity author = ds.get(authorKey);
-			if (author.getProperty("following").toString().isEmpty()) {
-				author.setProperty("following",followJsonObj.getEmailToFollow());
-			} else {
+			if (!(author.getProperty("following").toString().isEmpty())) {
 				String followingTotalString = (String) author.getProperty("following");
-				String followingResult = followingTotalString.replace("------", "---");
-				StringBuilder likedItems = new StringBuilder(followingResult);
-				likedItems.append("---");
-				likedItems.append(followJsonObj.getEmailToFollow());
-				author.setProperty("following", likedItems.toString());
+				String likedFirstStepOfRemove = followingTotalString.replace(followJsonObj.getEmailToFollow(), "");
+				String likedResult = likedFirstStepOfRemove.replace("------", "---");
+				author.setProperty("following", likedResult);
 			}
 			ds.put(author);
 			out.println(JSONUtil.success());

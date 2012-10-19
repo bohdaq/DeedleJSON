@@ -55,6 +55,16 @@
   </servlet-mapping>
   
   <servlet>
+    <servlet-name>unfollow</servlet-name>
+    <servlet-class>com.appspot.deedleit.server.api.Unfollow</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>unfollow</servlet-name>
+    <url-pattern>/api/v2/unfollow</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
     <servlet-name>comment</servlet-name>
     <servlet-class>com.appspot.deedleit.server.api.Comment</servlet-class>
   </servlet>
