@@ -80,6 +80,21 @@
   </servlet>
   
   <servlet-mapping>
+    <servlet-name>timeline</servlet-name>
+    <url-pattern>/api/v2/timeline</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>usersTimeline</servlet-name>
+    <servlet-class>com.appspot.deedleit.server.api.UsersTimeline</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>usersTimeline</servlet-name>
+    <url-pattern>/api/v2/userstimeline</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
     <servlet-name>timelineClientSide</servlet-name>
     <url-pattern>/api/v2/timelineClientSide</url-pattern>
   </servlet-mapping>
@@ -89,11 +104,6 @@
     <servlet-name>timelineClientSide</servlet-name>
     <servlet-class>com.appspot.deedleit.server.api.TimelineClientSide</servlet-class>
   </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>timeline</servlet-name>
-    <url-pattern>/api/v2/timeline</url-pattern>
-  </servlet-mapping>
 
   
   <servlet>
