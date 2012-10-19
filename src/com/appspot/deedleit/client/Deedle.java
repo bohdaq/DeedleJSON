@@ -80,6 +80,7 @@ public class Deedle implements EntryPoint {
 				public void onResponseReceived(Request request, Response response) {
 					if (200 == response.getStatusCode()) {
 						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).length()));
+						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(0).getPhotoId()));
 					} else {
 						Window.alert("Couldn't retrieve JSON (" + response.getStatusText()
 								+ ")");

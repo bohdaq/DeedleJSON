@@ -1,5 +1,7 @@
 package com.appspot.deedleit.server.json;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +24,9 @@ import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.urlfetch.HTTPResponse;
+import com.google.appengine.api.urlfetch.URLFetchService;
+import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 
 public class JSONUtil {
 	public static String success() {
@@ -302,7 +307,7 @@ public class JSONUtil {
 				jObject.put("title", e.getProperty("title"));
 				jObject.put("email", e.getProperty("email"));
 				jObject.put("description", e.getProperty("description"));
-				jObject.put("photoId", e.getProperty("photoId"));
+				jObject.put("photoId", getThumbUrl((String) e.getProperty("photoId")));
 				jObject.put("date", e.getProperty("date"));
 				jObject.put("latitude", e.getProperty("latitude"));
 				jObject.put("longtitude", e.getProperty("longtitude"));
@@ -352,6 +357,36 @@ public class JSONUtil {
 		return resultJArray.toString();
 	}
 	
+	private static String getThumbUrl(String photoId) {
+		String result = "not working :(";
+
+		URLFetchService fetcher = URLFetchServiceFactory.getURLFetchService();
+
+		try {
+			String adress = "https://www.googleapis.com/drive/v2/files/"
+					+ photoId + // fileId
+					"?key=AIzaSyAjfaP-rN1Z3X-EcNmycG7POTQpDkWj4Q8";
+			URL url = new URL(adress);
+			HTTPResponse response = fetcher.fetch(url);
+			byte[] content = response.getContent();
+			String debug = new String(content);
+			try {
+				JSONObject json = new JSONObject(debug);
+				String thumbnail = json.getString("thumbnailLink");
+				result = thumbnail.replace("=s220", "=s1200");
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// TODO Auto-generated catch block
+
+		} catch (IOException ex) {
+			ex.getLocalizedMessage();
+		}
+		return result;
+
+	}
+
 	private static Filter onlyFollowing(List<String> followingList) {
 		List<Filter> filtersList = new ArrayList<Filter>();
 		
