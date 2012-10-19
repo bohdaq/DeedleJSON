@@ -37,9 +37,9 @@ public class Dislike extends HttpServlet {
 		try {
 			Entity item = ds.get(itemKey);
 			authorEmail = (String) item.getProperty("email");
-			Long totallike = (Long) item.getProperty("like");
-			Long sumlike = totallike - 1;
-			item.setProperty("like", sumlike);
+			Long totallike = (Long) item.getProperty("unlike");
+			Long sumlike = totallike + 1;
+			item.setProperty("unlike", sumlike);
 			ds.put(item);
 		} catch (EntityNotFoundException e) {
 			out.println(JSONUtil.fail());
@@ -48,18 +48,30 @@ public class Dislike extends HttpServlet {
 		Key authorKey = KeyFactory.createKey("author", authorEmail);
 		try {
 			Entity author = ds.get(authorKey);
-			Long totallike = (Long) author.getProperty("like");
-			Long sumlike = totallike - 1;
-			author.setProperty("like", sumlike);
-			// setting rated items
-			if (author.getProperty("likedItems").toString().isEmpty()) {
-				author.setProperty("likedItems", likeJsonObj.getPhotoId());
-			}
+			Long totallike = (Long) author.getProperty("unlike");
+			Long sumlike = totallike + 1;
+			author.setProperty("unlike", sumlike);
 			ds.put(author);
 		} catch (EntityNotFoundException e) {
 			out.println(JSONUtil.fail());
 		}
 
+		Key authorLikedAddKey = KeyFactory.createKey("author", likeJsonObj.getEmail());
+		try {
+			Entity authorLikedAdd = ds.get(authorLikedAddKey);
+			
+			if (!(authorLikedAdd.getProperty("likedItems").toString().isEmpty())) {
+				String likedTotalString = (String) authorLikedAdd
+						.getProperty("likedItems");
+				String likedFirstStepOfRemove = likedTotalString.replace(likeJsonObj.getPhotoId(), "");
+				String likedResult = likedFirstStepOfRemove.replace("------", "---");
+				authorLikedAdd.setProperty("likedItems", likedResult);
+			}
+			ds.put(authorLikedAdd);
+		} catch (EntityNotFoundException e) {
+			out.println(JSONUtil.fail());
+		}
+		
 		out.print(JSONUtil.success());
 	}
 }

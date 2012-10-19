@@ -21,7 +21,7 @@ public class Deedle implements EntryPoint {
 	// Cut s220, make full size!
 
 	//JSON RPC
-	private static final String JSON_TIMELINE = "{ \"email\": \"example@gmail.com\", \"count\": 3, \"skip\": 0, \"rating\": \"all\", \"type\": \"all\", \"locations\": { \"city\": null, \"country\": null } }";
+	private static final String JSON_TIMELINE = "{ \"email\": \"example@gmail.com\", \"count\": 10, \"skip\": 0, \"rating\": \"all\", \"type\": \"all\", \"locations\": { \"city\": null, \"country\": null } }";
 	private static final String JSON_URL = GWT.getHostPageBaseURL()
 			+ "api/v2/timelineClientSide?json=" + JSON_TIMELINE;
 	

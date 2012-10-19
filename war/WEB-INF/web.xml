@@ -33,6 +33,16 @@
     <servlet-name>like</servlet-name>
     <url-pattern>/api/v2/like</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>dislike</servlet-name>
+    <servlet-class>com.appspot.deedleit.server.api.Dislike</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>dislike</servlet-name>
+    <url-pattern>/api/v2/dislike</url-pattern>
+  </servlet-mapping>
   
   <servlet>
     <servlet-name>follow</servlet-name>

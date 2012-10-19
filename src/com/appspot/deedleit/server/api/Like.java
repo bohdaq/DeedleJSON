@@ -51,18 +51,25 @@ public class Like extends HttpServlet {
 			Long totallike = (Long) author.getProperty("like");
 			Long sumlike = totallike + 1;
 			author.setProperty("like", sumlike);
-			// setting rated items
-			if (author.getProperty("likedItems").toString().isEmpty()) {
-				author.setProperty("likedItems", likeJsonObj.getPhotoId());
+			ds.put(author);
+		} catch (EntityNotFoundException e) {
+			out.println(JSONUtil.fail());
+		}
+
+		Key authorLikedAddKey = KeyFactory.createKey("author", likeJsonObj.getEmail());
+		try {
+			Entity authorLikedAdd = ds.get(authorLikedAddKey);
+			if (authorLikedAdd.getProperty("likedItems").toString().isEmpty()) {
+				authorLikedAdd.setProperty("likedItems", likeJsonObj.getPhotoId());
 			} else {
-				String likedTotalString = (String) author
-						.getProperty("likedItems");
-				StringBuilder likedItems = new StringBuilder(likedTotalString);
+				String likedTotalString = (String) authorLikedAdd.getProperty("likedItems");
+				String likedResult = likedTotalString.replace("------", "---");
+				StringBuilder likedItems = new StringBuilder(likedResult);
 				likedItems.append("---");
 				likedItems.append(likeJsonObj.getPhotoId());
-				author.setProperty("likedItems", likedItems.toString());
+				authorLikedAdd.setProperty("likedItems", likedItems.toString());
 			}
-			ds.put(author);
+			ds.put(authorLikedAdd);
 		} catch (EntityNotFoundException e) {
 			out.println(JSONUtil.fail());
 		}
