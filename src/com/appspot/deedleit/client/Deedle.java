@@ -32,8 +32,7 @@ public class Deedle implements EntryPoint {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public void onModuleLoad() {
-
+	public void onModuleLoad() {		
 		RootPanel.get("timeline").setVisible(false);
 		final Hyperlink showTimeline = new Hyperlink();
 		showTimeline.setText("Show Timeline");
@@ -59,16 +58,17 @@ public class Deedle implements EntryPoint {
 			}
 		});
 		RootPanel.get("switchLink").add(showTimeline);
-		
+
 		
 		//Getting JSON data and creating Timeline. The most important method!
 		JsArray<TimelineData> jsonTimelineArray = getJSONDataFromTimeline();
 	}
+
 	private JsArray<TimelineData> getJSONDataFromTimeline() {
 		
 		final ResponseWrapper timelineArrayResponse = new ResponseWrapper();
 		
-		Window.alert(JSON_URL);
+		//Window.alert(JSON_URL);
 		
 		String url = JSON_URL;
 		
@@ -84,15 +84,16 @@ public class Deedle implements EntryPoint {
 				public void onResponseReceived(Request request, Response response) {
 					if (200 == response.getStatusCode()) {
 						timelineArrayResponse.setResponse(asArrayOfStockData(response.getText()));
-						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).length()));
-						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(2).getPhotoId()));
-						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(0).getUserPhotoId()));
+						//Window.alert(String.valueOf(asArrayOfStockData(response.getText()).length()));
+						//Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(2).getPhotoId()));
+						//Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(0).getUserPhotoId()));
 						
 						String resultTimeline = ""; 
 						for (int i=0; i<timelineArrayResponse.getResponse().length(); i++){
 							resultTimeline += makeRawHtml(timelineArrayResponse.getResponse().get(i));
 							HTML rawHtml2 = new HTML();
 							rawHtml2.setHTML(resultTimeline);
+							RootPanel.get("loading").setVisible(false);
 							RootPanel.get("container_block").add(rawHtml2);
 							resultTimeline = ""; 
 						}
@@ -116,7 +117,7 @@ public class Deedle implements EntryPoint {
 				
 			});
 		} catch (RequestException e) {
-			Window.alert("Couldn't retrieve JSON");
+			//Window.alert("Couldn't retrieve JSON");
 		}
 		return timelineArrayResponse.getResponse();		
 	}
