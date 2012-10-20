@@ -1,2 +1,0 @@
-serviceClass: com.appspot.deedleit.client.TimelineService
-path: 2DC4CACC1302B5A2DD8C1E53AAE3B19A.gwt.rpc
