@@ -8,6 +8,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -58,13 +59,16 @@ public class Deedle implements EntryPoint {
 		
 		
 		//Getting JSON data:
-		getJSONDataFromTimeline();
-		
-	
+		JsArray<TimelineData> jsonTimelineArray = getJSONDataFromTimeline();
+		// Getted jsonTimelineArray - parse in cycle (for) and set for each
+		// element (.get(0)) its property (.get(...)) to div id="..."
 		
 	}
-	private void getJSONDataFromTimeline() {
-		Window.alert("Hello world!" + JSON_URL);
+	private JsArray<TimelineData> getJSONDataFromTimeline() {
+		
+		final ResponseWrapper timelineArrayResponse = new ResponseWrapper();
+		
+		Window.alert(JSON_URL);
 		
 		String url = JSON_URL;
 		
@@ -79,6 +83,7 @@ public class Deedle implements EntryPoint {
 				
 				public void onResponseReceived(Request request, Response response) {
 					if (200 == response.getStatusCode()) {
+						timelineArrayResponse.setResponse(asArrayOfStockData(response.getText()));
 						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).length()));
 						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(0).getPhotoId()));
 					} else {
@@ -91,9 +96,18 @@ public class Deedle implements EntryPoint {
 		} catch (RequestException e) {
 			Window.alert("Couldn't retrieve JSON");
 		}
-		
+		return timelineArrayResponse.getResponse();		
 	}
-
+	class ResponseWrapper {
+		JsArray<TimelineData> resp;
+	    void setResponse(JsArray<TimelineData> resp) {
+	        this.resp = resp;
+	    }
+	    JsArray<TimelineData> getResponse() {
+	        return resp;
+	    }
+	}
+	
 	private final native JsArray<TimelineData> asArrayOfStockData(String json) /*-{
 	    return eval(json);
 	  }-*/;
