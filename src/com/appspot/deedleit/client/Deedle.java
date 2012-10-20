@@ -61,28 +61,8 @@ public class Deedle implements EntryPoint {
 		RootPanel.get("switchLink").add(showTimeline);
 		
 		
-		//Getting JSON data:
+		//Getting JSON data and creating Timeline. The most important method!
 		JsArray<TimelineData> jsonTimelineArray = getJSONDataFromTimeline();
-		// Getted jsonTimelineArray - parse in cycle (for) and set for each
-		// element (.get(0)) its property (.get(...)) to div id="..."
-		
-//		//setting the main image
-//		//HTML img = new HTML();
-//		String imgUrl = jsonTimelineArray.get(0).getPhotoId();
-//		//String imgRaw = "<img src=\"" + imgUrl + "\" class=\"img_round\" width=\"614\" height=\"314\" alt=\"\" />";
-//		//img.setHTML(imgRaw);
-//		Image img = new Image(imgUrl);
-//		img.setStylePrimaryName("img_round");
-//		RootPanel.get("timeline").add(img);
-//		
-//		Hyperlink title = new Hyperlink();
-		HTML rawHtml = new HTML();
-		rawHtml.setHTML(Constants.htmlTimelineItem);
-		RootPanel.get("container_block").add(rawHtml);
-		
-		
-		
-		
 	}
 	private JsArray<TimelineData> getJSONDataFromTimeline() {
 		
@@ -105,17 +85,33 @@ public class Deedle implements EntryPoint {
 					if (200 == response.getStatusCode()) {
 						timelineArrayResponse.setResponse(asArrayOfStockData(response.getText()));
 						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).length()));
-						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(0).getPhotoId()));
+						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(2).getPhotoId()));
 						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(0).getUserPhotoId()));
-						//String title = response.getText().get(0).getTitle();
-						String total = Constants.preTitle + timelineArrayResponse.getResponse().get(0).getTitle() + Constants.postTitle;
-						HTML rawHtml2 = new HTML();
-						rawHtml2.setHTML(total);
-						RootPanel.get("container_block").add(rawHtml2);
+						
+						String resultTimeline = ""; 
+						for (int i=0; i<timelineArrayResponse.getResponse().length(); i++){
+							resultTimeline += makeRawHtml(timelineArrayResponse.getResponse().get(i));
+							HTML rawHtml2 = new HTML();
+							rawHtml2.setHTML(resultTimeline);
+							RootPanel.get("container_block").add(rawHtml2);
+							resultTimeline = ""; 
+						}
+						
 					} else {
 						Window.alert("Couldn't retrieve JSON (" + response.getStatusText()
 								+ ")");
 					}
+				}
+
+				private String makeRawHtml(TimelineData timelineItem) {
+					String total = "";
+						total += Constants.prePhoto + timelineItem.getPhotoId() + Constants.postPhoto +
+								Constants.preTitle + timelineItem.getTitle() + Constants.postTitle + 
+								Constants.preDescription + timelineItem.getDescription() + Constants.postDescription +
+								Constants.preAvatar + timelineItem.getUserPhotoId() + Constants.postAvatar +
+								Constants.preUserName + timelineItem.getName() + Constants.postUserName +
+								Constants.preLocation + timelineItem.getCountry() + ", " + timelineItem.getCity() + Constants.postUserName;
+					return total;
 				}
 				
 			});

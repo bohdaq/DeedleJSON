@@ -46,5 +46,17 @@ public class TimelineData extends JavaScriptObject {
 	public final native double getLongtitude() /*-{
 		return this.longtitude;
 	}-*/;
+	
+	public final native String getDescription() /*-{
+		return this.description;
+	}-*/;
+	
+	public final native String getCity() /*-{
+		return this.city;
+	}-*/;
+	
+	public final native String getCountry() /*-{
+		return this.country;
+	}-*/;
 
 }
