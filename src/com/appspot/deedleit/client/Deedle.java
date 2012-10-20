@@ -1,5 +1,6 @@
 package com.appspot.deedleit.client;
 
+import com.appspot.deedleit.shared.Constants;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
@@ -11,7 +12,9 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -63,6 +66,23 @@ public class Deedle implements EntryPoint {
 		// Getted jsonTimelineArray - parse in cycle (for) and set for each
 		// element (.get(0)) its property (.get(...)) to div id="..."
 		
+//		//setting the main image
+//		//HTML img = new HTML();
+//		String imgUrl = jsonTimelineArray.get(0).getPhotoId();
+//		//String imgRaw = "<img src=\"" + imgUrl + "\" class=\"img_round\" width=\"614\" height=\"314\" alt=\"\" />";
+//		//img.setHTML(imgRaw);
+//		Image img = new Image(imgUrl);
+//		img.setStylePrimaryName("img_round");
+//		RootPanel.get("timeline").add(img);
+//		
+//		Hyperlink title = new Hyperlink();
+		HTML rawHtml = new HTML();
+		rawHtml.setHTML(Constants.htmlTimelineItem);
+		RootPanel.get("container_block").add(rawHtml);
+		
+		
+		
+		
 	}
 	private JsArray<TimelineData> getJSONDataFromTimeline() {
 		
@@ -86,6 +106,12 @@ public class Deedle implements EntryPoint {
 						timelineArrayResponse.setResponse(asArrayOfStockData(response.getText()));
 						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).length()));
 						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(0).getPhotoId()));
+						Window.alert(String.valueOf(asArrayOfStockData(response.getText()).get(0).getUserPhotoId()));
+						//String title = response.getText().get(0).getTitle();
+						String total = Constants.preTitle + timelineArrayResponse.getResponse().get(0).getTitle() + Constants.postTitle;
+						HTML rawHtml2 = new HTML();
+						rawHtml2.setHTML(total);
+						RootPanel.get("container_block").add(rawHtml2);
 					} else {
 						Window.alert("Couldn't retrieve JSON (" + response.getStatusText()
 								+ ")");
