@@ -426,7 +426,7 @@ public class JSONUtil {
 			try {
 				JSONObject json = new JSONObject(debug);
 				String thumbnail = json.getString("thumbnailLink");
-				result = thumbnail.replace("=s220", "=s1200");
+				result = thumbnail.replace("=s220", "=s605");
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
