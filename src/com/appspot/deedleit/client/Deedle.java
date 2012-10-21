@@ -47,6 +47,7 @@ public class Deedle implements EntryPoint {
 					RootPanel.get("home-2").setVisible(false);
 					RootPanel.get("timeline").setVisible(true);
 					showTimeline.setText("Home");
+					showTimeline.setStyleName("signin");
 					//Window.alert("click");
 				} else if(showTimeline.getText().equals("Home")){
 					RootPanel.get("timeline").setVisible(false);
@@ -54,6 +55,7 @@ public class Deedle implements EntryPoint {
 					RootPanel.get("home-1").setVisible(true);
 					RootPanel.get("home-2").setVisible(true);
 					showTimeline.setText("Show Timeline");
+					showTimeline.setStyleName("login");
 				}
 			}
 		});
