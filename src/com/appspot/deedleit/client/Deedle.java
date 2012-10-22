@@ -101,8 +101,8 @@ public class Deedle implements EntryPoint {
 						}
 						
 					} else {
-						Window.alert("Couldn't retrieve JSON (" + response.getStatusText()
-								+ ")");
+//						Window.alert("Couldn't retrieve JSON (" + response.getStatusText()
+//								+ ")");
 					}
 				}
 
