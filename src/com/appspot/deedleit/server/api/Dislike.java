@@ -56,15 +56,33 @@ public class Dislike extends HttpServlet {
 			out.println(JSONUtil.fail());
 		}
 
+//		Key authorLikedAddKey = KeyFactory.createKey("author", likeJsonObj.getEmail());
+//		try {
+//			Entity authorLikedAdd = ds.get(authorLikedAddKey);
+//			
+//			if (!(authorLikedAdd.getProperty("likedItems").toString().isEmpty())) {
+//				String likedTotalString = (String) authorLikedAdd.getProperty("likedItems");
+//				String likedFirstStepOfRemove = likedTotalString.replace(likeJsonObj.getPhotoId(), "");
+//				String likedResult = likedFirstStepOfRemove.replace("------", "---");
+//				authorLikedAdd.setProperty("likedItems", likedResult);
+//			}
+//			ds.put(authorLikedAdd);
+//		} catch (EntityNotFoundException e) {
+//			out.println(JSONUtil.fail());
+//		}
+		
 		Key authorLikedAddKey = KeyFactory.createKey("author", likeJsonObj.getEmail());
 		try {
 			Entity authorLikedAdd = ds.get(authorLikedAddKey);
-			
-			if (!(authorLikedAdd.getProperty("likedItems").toString().isEmpty())) {
+			if (authorLikedAdd.getProperty("likedItems").toString().isEmpty()) {
+				authorLikedAdd.setProperty("likedItems", likeJsonObj.getPhotoId());
+			} else {
 				String likedTotalString = (String) authorLikedAdd.getProperty("likedItems");
-				String likedFirstStepOfRemove = likedTotalString.replace(likeJsonObj.getPhotoId(), "");
-				String likedResult = likedFirstStepOfRemove.replace("------", "---");
-				authorLikedAdd.setProperty("likedItems", likedResult);
+				String likedResult = likedTotalString.replace("------", "---");
+				StringBuilder likedItems = new StringBuilder(likedResult);
+				likedItems.append("---");
+				likedItems.append(likeJsonObj.getPhotoId());
+				authorLikedAdd.setProperty("likedItems", likedItems.toString());
 			}
 			ds.put(authorLikedAdd);
 		} catch (EntityNotFoundException e) {
