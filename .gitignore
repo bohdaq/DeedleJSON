@@ -1,0 +1,4 @@
+*.class
+
+gwt-unitCache
+test-classes
